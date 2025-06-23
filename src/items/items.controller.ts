@@ -3,8 +3,13 @@ import { ItemsService } from './items.service';
 import { CreateItemDto } from './dto/create-item.dto';
 import { UpdateItemDto } from './dto/update-item.dto';
 import { AuthGuard } from '../auth/guards/auth.guard';
+import { Roles } from 'src/auth/roles.decorator';
+import { Role } from 'src/auth/role.enum';
+import { RolesGuard } from 'src/auth/guards/roles.guard';
 
 @Controller('items')
+@UseGuards(AuthGuard,RolesGuard)
+@Roles(Role.EMPLOYEE)
 export class ItemsController {
   constructor(private readonly itemsService: ItemsService) { }
 
@@ -20,7 +25,6 @@ export class ItemsController {
     return { message: 'Item created', data: result };
   }
 
-  @UseGuards(AuthGuard)
   @Get(':id')
   findOne(@Param('id', ParseIntPipe) id: number) {
     return this.itemsService.findById(id);
