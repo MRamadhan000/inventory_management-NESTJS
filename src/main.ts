@@ -8,6 +8,9 @@ async function bootstrap() {
   try {
     const app = await NestFactory.create(AppModule);
 
+    app.enableCors();
+    app.setGlobalPrefix('api')
+
     // Pasang ValidationPipe secara global
     app.useGlobalPipes(new ValidationPipe({
       whitelist: true,
