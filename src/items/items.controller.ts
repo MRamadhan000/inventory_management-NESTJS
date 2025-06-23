@@ -1,7 +1,8 @@
-import { Controller, Get, Post, Body, Patch, Param, Delete, ParseIntPipe } from '@nestjs/common';
+import { Controller, Get, Post, Body, Patch, Param, Delete, ParseIntPipe, UseGuards } from '@nestjs/common';
 import { ItemsService } from './items.service';
 import { CreateItemDto } from './dto/create-item.dto';
 import { UpdateItemDto } from './dto/update-item.dto';
+import { AuthGuard } from '../auth/guards/auth.guard';
 
 @Controller('items')
 export class ItemsController {
@@ -19,6 +20,7 @@ export class ItemsController {
     return { message: 'Item created', data: result };
   }
 
+  @UseGuards(AuthGuard)
   @Get(':id')
   findOne(@Param('id', ParseIntPipe) id: number) {
     return this.itemsService.findById(id);

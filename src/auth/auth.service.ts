@@ -1,15 +1,17 @@
-// src/auth/auth.service.ts
 import { Injectable, ConflictException, UnauthorizedException } from '@nestjs/common';
 import { UsersService } from 'src/users/users.service';
+import { EmployeeService } from 'src/employee/employee.service';
 import { JwtService } from '@nestjs/jwt';
 import { LoginDto } from './dto/login.dto';
 import { RegisterDto } from './dto/register.dto';
 import * as bcrypt from 'bcryptjs';
+import { Role } from './role.enum';
 
 @Injectable()
 export class AuthService {
   constructor(
     private readonly usersService: UsersService,
+    private readonly employeeService : EmployeeService,
     private readonly jwtService: JwtService
   ) {}
 
@@ -24,7 +26,17 @@ export class AuthService {
       throw new UnauthorizedException('Invalid password');
     }
 
-    const payload = { sub: user.id, username: user.name };
+    const isEmployee = await this.employeeService.findByUserId(user.id);
+
+    let role;
+
+    if (isEmployee) {
+      role = Role.EMPLOYEE;
+    }else{
+      role = Role.MANAGER;
+    }
+
+    const payload = { sub: user.id, username: user.name,role: role };
     return {
       access_token: await this.jwtService.signAsync(payload),
     };

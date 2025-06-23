@@ -4,6 +4,7 @@ import { Repository } from 'typeorm';
 import { CreateUserDto } from './dto/create-user.dto';
 import { UpdateUserDto } from './dto/update-user.dto';
 import { User } from './entities/user.entity';
+import { ILike } from 'typeorm';
 
 @Injectable()
 export class UsersService {
@@ -32,7 +33,7 @@ export class UsersService {
   async findByName(name: string): Promise<User | null> {
     return await this.userRepository.findOne({ where: { name } });
   }
-
+  
   async update(id: number, updateUserDto: UpdateUserDto): Promise<User> {
     const user = await this.findOne(id);
     const updatedUser = Object.assign(user, updateUserDto);

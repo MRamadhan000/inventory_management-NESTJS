@@ -2,14 +2,18 @@ import { NestFactory } from '@nestjs/core';
 import { AppModule } from './app.module';
 import { ValidationPipe, Logger } from '@nestjs/common';
 
+import * as cookieParser from 'cookie-parser';
+// somewhere in your initialization file
+
+
 async function bootstrap() {
   const logger = new Logger('Bootstrap');
-
   try {
     const app = await NestFactory.create(AppModule);
 
     app.enableCors();
     app.setGlobalPrefix('api')
+    app.use(cookieParser());
 
     // Pasang ValidationPipe secara global
     app.useGlobalPipes(new ValidationPipe({

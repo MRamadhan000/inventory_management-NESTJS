@@ -1,6 +1,7 @@
 import { Entity, PrimaryGeneratedColumn, Column, OneToOne } from "typeorm";
 import { Manager } from "src/manager/entities/manager.entity";
 import { Employee } from "src/employee/entities/employee.entity";
+import { Role } from "src/auth/role.enum";
 
 @Entity()
 export class User {
@@ -21,4 +22,6 @@ export class User {
 
   @OneToOne(() => Manager, (manager) => manager.user)
   manager: Manager;
+
+  role: Role;
 }
